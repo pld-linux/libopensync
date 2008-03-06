@@ -1,31 +1,32 @@
-#
 # Conditional build:
 %bcond_without	python		# don't build python binding
-%bcond_without	static_libs	# don't build static library
 #
 Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
-# WARNING: don't go for 0.3x line - it's DEVELopment series
-Version:	0.22
-Release:	4
+Version:	0.36
+Release:	0.1
 Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
-Source0:	http://opensync.org/download/releases/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	f563ce2543312937a9afb4f8445ef932
-Patch0:		%{name}-py-m4.patch
+Source0:	http://www.opensync.org/download/releases/0.36/%{name}-%{version}.tar.bz2
+# Source0-md5:	d8cc7835663566e3626e959d8fb531bf
 URL:		http://www.opensync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	cmake
+BuildRequires:	glib2-devel >= 1:2.10
+BuildRequires:	libint-devel
 BuildRequires:	libtool
-BuildRequires:	libxml2-devel
+BuildRequires:	libxml2-devel >= 1:2.6
+BuildRequires:	pkgconfig
+BuildRequires:	rpmbuild(macros) >= 1.385
+BuildRequires:	sqlite3-devel >= 3.3
 %if %{with python}
 BuildRequires:	python-devel
 BuildRequires:	python-modules
 BuildRequires:	swig-python
 %endif
-BuildRequires:	sqlite3-devel
 # no such opensync plugins (yet?)
 Obsoletes:	multisync-ldap
 Obsoletes:	multisync-opie
@@ -58,7 +59,8 @@ Summary:	Header files for opensync library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki opensync
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	sqlite3-devel
+Requires:	glib2-devel >= 1:2.10
+Obsoletes:	libopensync-static
 Obsoletes:	multisync-devel
 
 %description devel
@@ -66,18 +68,6 @@ Header files for opensync library.
 
 %description devel -l pl.UTF-8
 Pliki nagłówkowe biblioteki opensync.
-
-%package static
-Summary:	Static opensync library
-Summary(pl.UTF-8):	Statyczna biblioteka opensync
-Group:		Development/Libraries
-Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
-
-%description static
-Static opensync library.
-
-%description static -l pl.UTF-8
-Statyczna biblioteka opensync.
 
 %package -n python-opensync
 Summary:	Python bindings for opensync library
@@ -94,34 +84,22 @@ Wiązania Pythona do biblioteki opensync.
 
 %prep
 %setup -q
-%patch0 -p1
-
-[ -x "%{_bindir}/python%{py_ver}-config" ] && sed -i -e 's#python-config#%{_bindir}/python%{py_ver}-config#g' acinclude.m4
 
 %build
-%{__libtoolize}
-%{__aclocal}
-%{__autoconf}
-%{__autoheader}
-%{__automake}
-%configure \
-	%{!?debug:--disable-debug --disable-tracing} \
-	--%{?with_static_libs:en}%{!?with_static_libs:dis}able-static \
-	--%{?with_python:en}%{!?with_python:dis}able-python
+%cmake \
+	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
+%if "%{_lib}" != "lib"
+	-DLIB_SUFFIX=64 \
+%endif
+	.
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_libdir}/opensync/plugins \
-    $RPM_BUILD_ROOT%{_datadir}/opensync/defaults
-
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
-
-rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.{py,la,a}
-rm -f $RPM_BUILD_ROOT%{_libdir}/opensync/formats/*.a
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -131,34 +109,31 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README TODO
+%doc AUTHORS README
 %attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
-%attr(755,root,root) %{_libdir}/osplugin
-%dir %{_libdir}/opensync
-%dir %{_libdir}/opensync/formats
-%dir %{_libdir}/opensync/plugins
-%dir %{_datadir}/opensync
-%dir %{_datadir}/opensync/defaults
-%attr(755,root,root) %{_libdir}/opensync/formats/*.so
-%{_libdir}/opensync/formats/*.la
+%attr(755,root,root) %{_libdir}/libopensync.so.*
+%dir %{_libdir}/opensync-*
+%dir %{_libdir}/opensync-*/formats
+%dir %{_libdir}/opensync-*/osplugin
+%dir %{_datadir}/opensync-*
+%{_datadir}/opensync-*/capabilities
+%{_datadir}/opensync-*/descriptions
+%{_datadir}/opensync-*/schemas
+%attr(755,root,root) %{_libdir}/opensync-*/formats/*.so
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so
-%{_libdir}/lib*.la
-%{_includedir}/opensync*
-%{_pkgconfigdir}/*.pc
+%attr(755,root,root) %{_libdir}/libopensync.so
+%{_includedir}/opensync-1.0
+%{_pkgconfigdir}/opensync-1.0.pc
 
-%if %{with static_libs}
-%files static
-%defattr(644,root,root,755)
-%{_libdir}/lib*.a
-%endif
+%dir %{_datadir}/opensync-*/cmake
+%dir %{_datadir}/opensync-*/cmake/modules
+%{_datadir}/opensync-*/cmake/modules/*.cmake
 
 %if %{with python}
 %files -n python-opensync
 %defattr(644,root,root,755)
-%attr(755,root,root) %{py_sitedir}/*.so
-%{py_sitedir}/*.py[co]
+%attr(755,root,root) %{py_sitedir}/_opensync.so
+%{py_sitedir}/opensync.py
 %endif
