@@ -86,19 +86,21 @@ Wiązania Pythona do biblioteki opensync.
 %setup -q
 
 %build
+mkdir build
+cd build
 %cmake \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 %if "%{_lib}" != "lib"
 	-DLIB_SUFFIX=64 \
 %endif
-	.
+	../
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
+%{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %clean
