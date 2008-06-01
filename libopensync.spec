@@ -5,7 +5,7 @@ Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
 Version:	0.36
-Release:	2
+Release:	3
 Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+install -d $RPM_BUILD_ROOT%{_libdir}/opensync-*/defaults
+install -d $RPM_BUILD_ROOT%{_libdir}/opensync-*/plugins
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -115,8 +118,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/libopensync.so.*
 %dir %{_libdir}/opensync-*
+%dir %{_libdir}/opensync-*/defaults
 %dir %{_libdir}/opensync-*/formats
 %dir %{_libdir}/opensync-*/osplugin
+%dir %{_libdir}/opensync-*/plugins
 %dir %{_datadir}/opensync-*
 %{_datadir}/opensync-*/capabilities
 %{_datadir}/opensync-*/descriptions
