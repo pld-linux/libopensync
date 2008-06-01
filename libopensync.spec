@@ -104,7 +104,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT%{_datadir}/opensync-1.0/defaults
-install -d $RPM_BUILD_ROOT%{_datadir}/opensync-1.0/plugins
+install -d $RPM_BUILD_ROOT%{_libdir}/opensync-1.0/plugins
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -120,11 +120,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/opensync-*
 %dir %{_libdir}/opensync-*/formats
 %dir %{_libdir}/opensync-*/osplugin
+%dir %{_libdir}/opensync-*/plugins
 %dir %{_datadir}/opensync-*
 %{_datadir}/opensync-*/capabilities
 %{_datadir}/opensync-*/defaults
 %{_datadir}/opensync-*/descriptions
-%{_datadir}/opensync-*/plugins
 %{_datadir}/opensync-*/schemas
 %attr(755,root,root) %{_libdir}/opensync-*/formats/*.so
 
