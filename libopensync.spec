@@ -5,7 +5,7 @@ Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
 Version:	0.36
-Release:	4
+Release:	5
 Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
@@ -62,6 +62,7 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	glib2-devel >= 1:2.10
 Obsoletes:	libopensync-static
 Obsoletes:	multisync-devel
+Conflicts:	libopensync02-devel
 
 %description devel
 Header files for opensync library.
