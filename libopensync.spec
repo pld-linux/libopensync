@@ -118,26 +118,24 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS README
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/libopensync.so.*
-%dir %{_libdir}/opensync-*
-%dir %{_libdir}/opensync-*/formats
-%dir %{_libdir}/opensync-*/osplugin
-%dir %{_libdir}/opensync-*/plugins
-%dir %{_datadir}/opensync-*
-%{_datadir}/opensync-*/capabilities
-%{_datadir}/opensync-*/defaults
-%{_datadir}/opensync-*/descriptions
-%{_datadir}/opensync-*/schemas
-%attr(755,root,root) %{_libdir}/opensync-*/formats/*.so
+%dir %{_libdir}/libopensync1
+%dir %{_libdir}/libopensync1/formats
+%dir %{_libdir}/libopensync1/osplugin
+%dir %{_datadir}/libopensync1
+%{_datadir}/libopensync1/capabilities
+%{_datadir}/libopensync1/descriptions
+%{_datadir}/libopensync1/schemas
+%attr(755,root,root) %{_libdir}/libopensync1/formats/*.so
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libopensync.so
-%{_includedir}/opensync-1.0
-%{_pkgconfigdir}/opensync-1.0.pc
+%{_includedir}/libopensync1
+%{_pkgconfigdir}/libopensync.pc
 
-%dir %{_datadir}/opensync-*/cmake
-%dir %{_datadir}/opensync-*/cmake/modules
-%{_datadir}/opensync-*/cmake/modules/*.cmake
+%dir %{_datadir}/libopensync1/cmake
+%dir %{_datadir}/libopensync1/cmake/modules
+%{_datadir}/libopensync1/cmake/modules/*.cmake
 
 %if %{with python}
 %files -n python-opensync
