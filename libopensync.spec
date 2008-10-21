@@ -14,11 +14,13 @@ Source0:	http://www.opensync.org/download/releases/0.37/%{name}-%{version}.tar.b
 URL:		http://www.opensync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	check
 BuildRequires:	cmake
 BuildRequires:	glib2-devel >= 1:2.10
 BuildRequires:	libint-devel
 BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6
+BuildRequires:	libxslt-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.385
 BuildRequires:	sqlite3-devel >= 3.3
