@@ -1,0 +1,21 @@
+--- libopensync-0.37/wrapper/opensync-plugin.i.orig	2008-10-21 21:24:58.170224877 +0200
++++ libopensync-0.37/wrapper/opensync-plugin.i	2008-10-21 21:26:53.662287371 +0200
+@@ -373,15 +373,15 @@
+ 	}
+ 
+ 	const char *nth_objformat(int nth) {
+-		return osync_objtype_sink_nth_objformat(self, nth);
++		return osync_objtype_sink_nth_objformat_sink(self, nth);
+ 	}
+ 
+ 	void add_objformat(const char *format) {
+-		osync_objtype_sink_add_objformat(self, format);
++		osync_objtype_sink_add_objformat_sink(self, format);
+ 	}
+ 
+ 	void remove_objformat(const char *format) {
+-		osync_objtype_sink_remove_objformat(self, format);
++		osync_objtype_sink_remove_objformat_sink(self, format);
+ 	}
+ 
+ 	/* TODO: set_functions */
