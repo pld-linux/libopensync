@@ -1,23 +1,31 @@
 # Conditional build:
+#
+#
+%define		_snap	20081027
+
 %bcond_without	python		# don't build python binding
 #
 Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
-Version:	0.36
-Release:	0.1
+Version:	0.40
+Release:	0.%{_snap}.1
+Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
-Source0:	http://www.opensync.org/download/releases/0.36/%{name}-%{version}.tar.bz2
-# Source0-md5:	d8cc7835663566e3626e959d8fb531bf
+Source0:	%{name}-%{version}-%{_snap}.tar.bz2
+# Source0-md5:	6ffdd16c5deaee95c1d4762c44d57d5a
+Patch0:		%{name}-python_wrapper_update.patch
 URL:		http://www.opensync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	check
 BuildRequires:	cmake
 BuildRequires:	glib2-devel >= 1:2.10
 BuildRequires:	libint-devel
 BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6
+BuildRequires:	libxslt-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.385
 BuildRequires:	sqlite3-devel >= 3.3
@@ -57,10 +65,11 @@ kontaktami, kalendarzem, zadaniami, notatkami i plikami.
 Summary:	Header files for opensync library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki opensync
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	glib2-devel >= 1:2.10
 Obsoletes:	libopensync-static
 Obsoletes:	multisync-devel
+Conflicts:	libopensync02-devel
 
 %description devel
 Header files for opensync library.
@@ -72,7 +81,7 @@ Pliki nagłówkowe biblioteki opensync.
 Summary:	Python bindings for opensync library
 Summary(pl.UTF-8):	Wiązania Pythona do biblioteki opensync
 Group:		Libraries/Python
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 %pyrequires_eq  python-libs
 
 %description -n python-opensync
@@ -82,23 +91,29 @@ Python bindings for opensync library.
 Wiązania Pythona do biblioteki opensync.
 
 %prep
-%setup -q
+%setup -q -n %{name} 
+%patch0 -p1
 
 %build
+mkdir build
+cd build
 %cmake \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 %if "%{_lib}" != "lib"
 	-DLIB_SUFFIX=64 \
 %endif
-	.
+	../
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
+%{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT%{_datadir}/libopensync1/defaults
+install -d $RPM_BUILD_ROOT%{_libdir}/libopensync1/plugins
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -111,24 +126,26 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS README
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/libopensync.so.*
-%dir %{_libdir}/opensync-*
-%dir %{_libdir}/opensync-*/formats
-%dir %{_libdir}/opensync-*/osplugin
-%dir %{_datadir}/opensync-*
-%{_datadir}/opensync-*/capabilities
-%{_datadir}/opensync-*/descriptions
-%{_datadir}/opensync-*/schemas
-%attr(755,root,root) %{_libdir}/opensync-*/formats/*.so
+%dir %{_libdir}/libopensync1
+%dir %{_libdir}/libopensync1/formats
+%dir %{_libdir}/libopensync1/plugins
+%dir %{_datadir}/libopensync1
+%attr(755,root,root) %{_libdir}/libopensync1/osplugin
+%{_datadir}/libopensync1/capabilities
+%{_datadir}/libopensync1/defaults
+%{_datadir}/libopensync1/descriptions
+%{_datadir}/libopensync1/schemas
+%attr(755,root,root) %{_libdir}/libopensync1/formats/*.so
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libopensync.so
-%{_includedir}/opensync-1.0
-%{_pkgconfigdir}/opensync-1.0.pc
+%{_includedir}/libopensync1
+%{_pkgconfigdir}/libopensync.pc
 
-%dir %{_datadir}/opensync-*/cmake
-%dir %{_datadir}/opensync-*/cmake/modules
-%{_datadir}/opensync-*/cmake/modules/*.cmake
+%dir %{_datadir}/libopensync1/cmake
+%dir %{_datadir}/libopensync1/cmake/modules
+%{_datadir}/libopensync1/cmake/modules/*.cmake
 
 %if %{with python}
 %files -n python-opensync
