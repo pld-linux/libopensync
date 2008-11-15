@@ -5,7 +5,7 @@ Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
 Version:	0.37
-Release:	5
+Release:	6
 Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
@@ -91,10 +91,12 @@ Wiązania Pythona do biblioteki opensync.
 %patch0 -p1
 
 %build
+rm cmake/modules/*Python*.cmake
 mkdir build
 cd build
 %cmake \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
+	-DPYTHON_VERSION=%{py_ver} \
 %if "%{_lib}" != "lib"
 	-DLIB_SUFFIX=64 \
 %endif
