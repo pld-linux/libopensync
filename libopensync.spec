@@ -150,6 +150,6 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python}
 %files -n python-opensync
 %defattr(644,root,root,755)
-%attr(755,root,root) %{py_sitedir}/_opensync.so
-%{py_sitedir}/opensync.py
+#%attr(755,root,root) %{py_sitedir}/_opensync.so
+#%{py_sitedir}/opensync.py
 %endif
