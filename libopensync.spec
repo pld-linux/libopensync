@@ -23,12 +23,12 @@ BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6
 BuildRequires:	libxslt-devel
 BuildRequires:	pkgconfig
-BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.385
 BuildRequires:	sqlite3-devel >= 3.3
 %if %{with python}
 BuildRequires:	python-devel
 BuildRequires:	python-modules
+BuildRequires:	rpm-pythonprov
 BuildRequires:	swig-python
 %endif
 # no such opensync plugins (yet?)
