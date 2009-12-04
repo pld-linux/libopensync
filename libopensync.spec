@@ -32,6 +32,7 @@ BuildRequires:	sqlite3-devel >= 3.3
 %if %{with python}
 BuildRequires:	python-devel
 BuildRequires:	python-modules
+BuildRequires:	rpm-pythonprov
 BuildRequires:	swig-python
 %endif
 # no such opensync plugins (yet?)
@@ -91,7 +92,7 @@ Python bindings for opensync library.
 Wiązania Pythona do biblioteki opensync.
 
 %prep
-%setup -q -n %{name} 
+%setup -q -n %{name}
 %patch0 -p1
 
 %build
