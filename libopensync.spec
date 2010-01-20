@@ -4,14 +4,13 @@
 Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
-Version:	0.37
-Release:	7
+Version:	0.39
+Release:	1
 Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
-Source0:	http://www.opensync.org/download/releases/0.37/%{name}-%{version}.tar.bz2
-# Source0-md5:	5b99caaf15d878719f9135713f63ebc5
-Patch0:		%{name}-python_wrapper_update.patch
+Source0:	http://www.opensync.org/download/releases/0.39/%{name}-%{version}.tar.bz2
+# Source0-md5:	733211e82b61e2aa575d149dda17d475
 URL:		http://www.opensync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -89,7 +88,6 @@ Wiązania Pythona do biblioteki opensync.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 rm cmake/modules/*Python*.cmake
@@ -126,7 +124,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/libopensync.so.*
 %dir %{_libdir}/libopensync1
-%dir %{_libdir}/libopensync1/formats
 %dir %{_libdir}/libopensync1/plugins
 %dir %{_datadir}/libopensync1
 %attr(755,root,root) %{_libdir}/libopensync1/osplugin
@@ -134,7 +131,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/libopensync1/defaults
 %{_datadir}/libopensync1/descriptions
 %{_datadir}/libopensync1/schemas
-%attr(755,root,root) %{_libdir}/libopensync1/formats/*.so
 
 %files devel
 %defattr(644,root,root,755)
