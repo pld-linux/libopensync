@@ -5,7 +5,7 @@ Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
 Version:	0.39
-Release:	2
+Release:	3
 Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
@@ -15,7 +15,7 @@ URL:		http://www.opensync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	check
-BuildRequires:	cmake
+BuildRequires:	cmake >= 2.8.2-2
 BuildRequires:	glib2-devel >= 1:2.10
 BuildRequires:	libint-devel
 BuildRequires:	libtool
@@ -121,8 +121,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS README
-%attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/libopensync.so.*
+%attr(755,root,root) %{_bindir}/osyncbinary
+%attr(755,root,root) %{_bindir}/osyncdump
+%attr(755,root,root) %{_bindir}/osyncplugin
+%attr(755,root,root) %{_libdir}/libopensync.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libopensync.so.1
 %dir %{_libdir}/libopensync1
 %dir %{_libdir}/libopensync1/plugins
 %dir %{_datadir}/libopensync1
@@ -137,10 +140,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libopensync.so
 %{_includedir}/libopensync1
 %{_pkgconfigdir}/libopensync.pc
-
 %dir %{_datadir}/libopensync1/cmake
 %dir %{_datadir}/libopensync1/cmake/modules
-%{_datadir}/libopensync1/cmake/modules/*.cmake
+%{_datadir}/libopensync1/cmake/modules/OpenSync*.cmake
 
 %if %{with python}
 %files -n python-opensync
