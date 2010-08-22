@@ -5,12 +5,13 @@ Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
 Version:	0.39
-Release:	3
+Release:	4
 Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://www.opensync.org/download/releases/0.39/%{name}-%{version}.tar.bz2
 # Source0-md5:	733211e82b61e2aa575d149dda17d475
+Patch0:		python-syntax.patch
 URL:		http://www.opensync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -28,6 +29,7 @@ BuildRequires:	sqlite3-devel >= 3.3
 BuildRequires:	python-devel
 BuildRequires:	python-modules
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	swig-python
 %endif
 # no such opensync plugins (yet?)
@@ -88,29 +90,38 @@ Wiązania Pythona do biblioteki opensync.
 
 %prep
 %setup -q
+%patch0 -p1
+
+# broken, use fixed from cmake itself
+rm cmake/modules/*Python*.cmake
 
 %build
-rm cmake/modules/*Python*.cmake
 mkdir build
 cd build
 %cmake \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DPYTHON_VERSION=%{py_ver} \
-%if "%{_lib}" != "lib"
+%if "%{_lib}" == "lib64"
 	-DLIB_SUFFIX=64 \
 %endif
 	../
 
 %{__make}
 
+%py_lint
+
 %install
 rm -rf $RPM_BUILD_ROOT
-
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+%py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
+%py_comp $RPM_BUILD_ROOT%{py_sitedir}
+%py_postclean
+
 install -d $RPM_BUILD_ROOT%{_datadir}/libopensync1/defaults
 install -d $RPM_BUILD_ROOT%{_libdir}/libopensync1/plugins
+install -d $RPM_BUILD_ROOT%{_libdir}/libopensync1/formats
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -128,8 +139,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libopensync.so.1
 %dir %{_libdir}/libopensync1
 %dir %{_libdir}/libopensync1/plugins
-%dir %{_datadir}/libopensync1
+%dir %{_libdir}/libopensync1/formats
 %attr(755,root,root) %{_libdir}/libopensync1/osplugin
+%dir %{_datadir}/libopensync1
 %{_datadir}/libopensync1/capabilities
 %{_datadir}/libopensync1/defaults
 %{_datadir}/libopensync1/descriptions
@@ -148,5 +160,5 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python-opensync
 %defattr(644,root,root,755)
 %attr(755,root,root) %{py_sitedir}/_opensync.so
-%{py_sitedir}/opensync.py
+%{py_sitedir}/opensync.py[co]
 %endif

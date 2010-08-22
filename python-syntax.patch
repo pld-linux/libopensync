@@ -1,0 +1,26 @@
+--- libopensync-0.39/wrapper/opensync-group.i~	2009-09-20 23:14:18.000000000 +0300
++++ libopensync-0.39/wrapper/opensync-group.i	2010-08-22 12:41:26.427055426 +0300
+@@ -213,9 +213,7 @@
+ 	__oldinit = __init__
+ 	def __init__(self, *args):
+ 		self.__oldinit(*args)
+-                /*
+-		self.filters = _ListWrapper(self.num_filters, self.nth_filter)
+-                */
++		#self.filters = _ListWrapper(self.num_filters, self.nth_filter)
+ %}
+ }
+ 
+--- libopensync-0.39/wrapper/opensync-format.i~	2009-09-20 23:14:18.000000000 +0300
++++ libopensync-0.39/wrapper/opensync-format.i	2010-08-22 12:41:34.620377794 +0300
+@@ -278,9 +278,7 @@
+ 	__oldinit = __init__
+ 	def __init__(self, *args):
+ 		self.__oldinit(*args)
+-                /*
+-		self.filters = _ListWrapper(self.num_filters, self.nth_filter)
+-                */
++		#self.filters = _ListWrapper(self.num_filters, self.nth_filter)
+ %}
+ }
+ 
