@@ -1,17 +1,19 @@
+#
 # Conditional build:
 %bcond_without	python		# don't build python binding
-#
+
 Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
 Version:	0.39
-Release:	4
+Release:	6
 Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://www.opensync.org/download/releases/0.39/%{name}-%{version}.tar.bz2
 # Source0-md5:	733211e82b61e2aa575d149dda17d475
 Patch0:		python-syntax.patch
+Patch1:		python-noarch-plugins.patch
 URL:		http://www.opensync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -23,13 +25,12 @@ BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6
 BuildRequires:	libxslt-devel
 BuildRequires:	pkgconfig
-BuildRequires:	rpmbuild(macros) >= 1.385
+BuildRequires:	rpmbuild(macros) >= 1.600
 BuildRequires:	sqlite3-devel >= 3.3
 %if %{with python}
 BuildRequires:	python-devel
 BuildRequires:	python-modules
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	swig-python
 %endif
 # no such opensync plugins (yet?)
@@ -99,12 +100,8 @@ rm cmake/modules/*Python*.cmake
 mkdir build
 cd build
 %cmake \
-	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DPYTHON_VERSION=%{py_ver} \
-%if "%{_lib}" == "lib64"
-	-DLIB_SUFFIX=64 \
-%endif
-	../
+	..
 
 %{__make}
 
@@ -120,6 +117,7 @@ rm -rf $RPM_BUILD_ROOT
 %py_postclean
 
 install -d $RPM_BUILD_ROOT%{_datadir}/libopensync1/defaults
+install -d $RPM_BUILD_ROOT%{_datadir}/libopensync1/python-plugins
 install -d $RPM_BUILD_ROOT%{_libdir}/libopensync1/plugins
 install -d $RPM_BUILD_ROOT%{_libdir}/libopensync1/formats
 
@@ -161,4 +159,5 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{py_sitedir}/_opensync.so
 %{py_sitedir}/opensync.py[co]
+%{_datadir}/libopensync1/python-plugins
 %endif
