@@ -1,12 +1,12 @@
 #
 # Conditional build:
-%bcond_without	python		# don't build python binding
+%bcond_without	python	# don't build python binding
 
 Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
 Version:	0.39
-Release:	7
+Release:	8
 Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
@@ -14,25 +14,24 @@ Source0:	http://www.opensync.org/download/releases/0.39/%{name}-%{version}.tar.b
 # Source0-md5:	733211e82b61e2aa575d149dda17d475
 Patch0:		python-syntax.patch
 Patch1:		python-noarch-plugins.patch
+Patch2:		%{name}-glib.patch
+Patch3:		%{name}-python.patch
 URL:		http://www.opensync.org/
-BuildRequires:	autoconf
-BuildRequires:	automake
 BuildRequires:	check
 BuildRequires:	cmake >= 2.8.2-2
-BuildRequires:	glib2-devel >= 1:2.10
-BuildRequires:	libint-devel
-BuildRequires:	libtool
+BuildRequires:	glib2-devel >= 1:2.12
 BuildRequires:	libxml2-devel >= 1:2.6
 BuildRequires:	libxslt-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.600
 BuildRequires:	sqlite3-devel >= 3.3
 %if %{with python}
-BuildRequires:	python-devel
-BuildRequires:	python-modules
+BuildRequires:	python-devel >= 2
+BuildRequires:	python-modules >= 2
 BuildRequires:	rpm-pythonprov
 BuildRequires:	swig-python
 %endif
+Requires:	glib2 >= 1:2.12
 # no such opensync plugins (yet?)
 Obsoletes:	multisync-ldap
 Obsoletes:	multisync-opie
@@ -65,7 +64,7 @@ Summary:	Header files for opensync library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki opensync
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	glib2-devel >= 1:2.10
+Requires:	glib2-devel >= 1:2.12
 Obsoletes:	libopensync-static
 Obsoletes:	multisync-devel
 Conflicts:	libopensync02-devel
@@ -93,16 +92,17 @@ Wiązania Pythona do biblioteki opensync.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 # broken, use fixed from cmake itself
-rm cmake/modules/*Python*.cmake
+%{__rm} cmake/modules/*Python*.cmake
 
 %build
 mkdir build
 cd build
-%cmake \
-	-DPYTHON_VERSION=%{py_ver} \
-	..
+%cmake .. \
+	-DPYTHON_VERSION=%{py_ver}
 
 %{__make}
 
@@ -118,7 +118,6 @@ rm -rf $RPM_BUILD_ROOT
 %py_postclean
 
 install -d $RPM_BUILD_ROOT%{_datadir}/libopensync1/defaults
-install -d $RPM_BUILD_ROOT%{_datadir}/libopensync1/python-plugins
 install -d $RPM_BUILD_ROOT%{_libdir}/libopensync1/plugins
 install -d $RPM_BUILD_ROOT%{_libdir}/libopensync1/formats
 
@@ -160,5 +159,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{py_sitedir}/_opensync.so
 %{py_sitedir}/opensync.py[co]
-%{_datadir}/libopensync1/python-plugins
 %endif

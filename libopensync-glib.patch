@@ -1,0 +1,11 @@
+--- libopensync-0.39/opensync/common/opensync_list.c.orig	2009-09-20 22:14:18.000000000 +0200
++++ libopensync-0.39/opensync/common/opensync_list.c	2015-01-31 13:48:17.947222136 +0100
+@@ -30,7 +30,7 @@
+  * MT safe
+  */
+ 
+-#include <glib/gmem.h>
++#include <glib.h>
+ #include "opensync_list.h"
+ #include "opensync_internals.h"
+ 

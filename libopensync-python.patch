@@ -1,0 +1,20 @@
+--- libopensync-0.39/wrapper/opensync-error.i.orig	2009-09-20 22:14:18.000000000 +0200
++++ libopensync-0.39/wrapper/opensync-error.i	2015-01-31 14:37:50.320430729 +0100
+@@ -46,7 +46,7 @@
+ 		osync_error_set_from_error(&self, &source);
+ 	}
+ 
+-	void set(ErrorType type, const char *msg) {
++	void set_(ErrorType type, const char *msg) {
+ 		osync_error_set(&self, type, "%s", msg);
+ 	}
+ 
+@@ -64,7 +64,7 @@
+ %pythoncode %{
+ 	# for some reason the OpenSync API only allows setting the msg with a type
+ 	def __set_msg(self, msg):
+-		self.set(self.num, msg)
++		self.set_(self.num, msg)
+ 
+ 	def __str__(self):
+ 		return self.get_name() + ": " + self.get_msg()
