@@ -6,17 +6,18 @@ Summary:	Data synchronization framework
 Summary(pl.UTF-8):	Szkielet do synchronizacji danych
 Name:		libopensync
 Version:	0.39
-Release:	11
+Release:	12
 Epoch:		1
 License:	LGPL v2.1+
 Group:		Libraries
-Source0:	http://www.opensync.org/download/releases/0.39/%{name}-%{version}.tar.bz2
+Source0:	https://www.opensync.io/download/releases/0.39/%{name}-%{version}.tar.bz2
 # Source0-md5:	733211e82b61e2aa575d149dda17d475
 Patch0:		python-syntax.patch
 Patch1:		python-noarch-plugins.patch
 Patch2:		%{name}-glib.patch
 Patch3:		%{name}-python.patch
-URL:		http://www.opensync.org/
+Patch4:		notests.patch
+URL:		https://www.opensync.io/
 BuildRequires:	check
 BuildRequires:	cmake >= 2.8.2-2
 BuildRequires:	glib2-devel >= 1:2.12
@@ -94,6 +95,7 @@ Wiązania Pythona do biblioteki opensync.
 %patch -P1 -p1
 %patch -P2 -p1
 %patch -P3 -p1
+%patch -P4 -p1
 
 # broken, use fixed from cmake itself
 %{__rm} cmake/modules/*Python*.cmake

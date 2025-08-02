@@ -18,3 +18,93 @@
  
  	def __str__(self):
  		return self.get_name() + ": " + self.get_msg()
+diff -urN libopensync-0.39.org/wrapper/opensync-context.i libopensync-0.39/wrapper/opensync-context.i
+--- libopensync-0.39.org/wrapper/opensync-context.i	2009-09-20 22:14:18.000000000 +0200
++++ libopensync-0.39/wrapper/opensync-context.i	2025-08-02 21:52:14.025183184 +0200
+@@ -2,7 +2,7 @@
+ %extend Context {
+ 	/* called by python-module plugin */
+ 	Context(PyObject *obj) {
+-		Context *context = PyCObject_AsVoidPtr(obj);
++		Context *context = PyCapsule_GetPointer(obj, NULL);
+ 		osync_context_ref(context);
+ 		return context;
+ 	}
+diff -urN libopensync-0.39.org/wrapper/opensync-data.i libopensync-0.39/wrapper/opensync-data.i
+--- libopensync-0.39.org/wrapper/opensync-data.i	2009-09-20 22:14:18.000000000 +0200
++++ libopensync-0.39/wrapper/opensync-data.i	2025-08-02 21:52:14.021849830 +0200
+@@ -124,7 +124,7 @@
+ %extend Change {
+ 	/* called by python-module plugin */
+ 	Change(PyObject *obj) {
+-		Change *change = PyCObject_AsVoidPtr(obj);
++		Change *change = PyCapsule_GetPointer(obj, NULL);
+ 		osync_change_ref(change);
+ 		return change;
+ 	}
+diff -urN libopensync-0.39.org/wrapper/opensync-engine.i libopensync-0.39/wrapper/opensync-engine.i
+--- libopensync-0.39.org/wrapper/opensync-engine.i	2009-09-20 22:14:18.000000000 +0200
++++ libopensync-0.39/wrapper/opensync-engine.i	2025-08-02 21:52:14.021849830 +0200
+@@ -182,7 +182,7 @@
+ 			PyObject *pyfunc = clientdata;
+ 			PyObject *errobj = SWIG_NewPointerObj(error, SWIGTYPE_p_Error, 0);
+ 			PyObject *args = Py_BuildValue("(iO)", event, errobj);
+-			PyObject *result = PyEval_CallObject(pyfunc, args);
++			PyObject *result = PyObject_CallObject(pyfunc, args);
+ 			Py_DECREF(args);
+ 			Py_XDECREF(result);
+ 
+diff -urN libopensync-0.39.org/wrapper/opensync-error.i libopensync-0.39/wrapper/opensync-error.i
+--- libopensync-0.39.org/wrapper/opensync-error.i	2009-09-20 22:14:18.000000000 +0200
++++ libopensync-0.39/wrapper/opensync-error.i	2025-08-02 21:52:14.025183184 +0200
+@@ -3,7 +3,7 @@
+ %extend Error {
+ 	/* called by python-module plugin */
+ 	Error(PyObject *obj) {
+-		Error *error = PyCObject_AsVoidPtr(obj);
++		Error *error = PyCapsule_GetPointer(obj, NULL);
+ 		osync_error_ref(&error);
+ 		return error;
+ 	}
+diff -urN libopensync-0.39.org/wrapper/opensync-merger.i libopensync-0.39/wrapper/opensync-merger.i
+--- libopensync-0.39.org/wrapper/opensync-merger.i	2009-09-20 22:14:18.000000000 +0200
++++ libopensync-0.39/wrapper/opensync-merger.i	2025-08-02 21:52:14.025183184 +0200
+@@ -118,7 +118,7 @@
+ 		if (raise_exception_on_error(err))
+ 			return NULL;
+ 
+-		PyObject *obj = PyString_FromStringAndSize(buf, size);
++		PyObject *obj = PyBytes_FromStringAndSize(buf, size);
+ 		free(buf);
+ 		return obj;
+ 	}
+diff -urN libopensync-0.39.org/wrapper/opensync-plugin.i libopensync-0.39/wrapper/opensync-plugin.i
+--- libopensync-0.39.org/wrapper/opensync-plugin.i	2009-09-20 22:14:18.000000000 +0200
++++ libopensync-0.39/wrapper/opensync-plugin.i	2025-08-02 21:52:14.021849830 +0200
+@@ -9,7 +9,7 @@
+ %extend Plugin {
+ 	/* called by python-module plugin */
+ 	Plugin(PyObject *obj) {
+-		Plugin *plugin = PyCObject_AsVoidPtr(obj);
++		Plugin *plugin = PyCapsule_GetPointer(obj, NULL);
+ 		osync_plugin_ref(plugin);
+ 		return plugin;
+ 	}
+@@ -149,7 +149,7 @@
+ %extend PluginInfo {
+ 	/* called by python-module plugin */
+ 	PluginInfo(PyObject *obj) {
+-		PluginInfo *info = PyCObject_AsVoidPtr(obj);
++		PluginInfo *info = PyCapsule_GetPointer(obj, NULL);
+ 		osync_plugin_info_ref(info);
+ 		return info;
+ 	}
+@@ -287,7 +287,7 @@
+ %extend PluginConfig {
+ 	/* called by python-module plugin */
+ 	PluginConfig(PyObject *obj) {
+-		PluginConfig *config = PyCObject_AsVoidPtr(obj);
++		PluginConfig *config = PyCapsule_GetPointer(obj, NULL);
+ 		osync_plugin_config_ref(config);
+ 		return config;
+ 	}
